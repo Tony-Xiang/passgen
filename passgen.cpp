@@ -1,5 +1,6 @@
 #include<iostream>
 #include<string>
+#include<algorithm>
 
 using namespace std;
 
@@ -17,6 +18,8 @@ struct string_type
 string_type numerator[80];
 
 int customize();
+
+string dup_string_check();
 
 bool dup_range_check(int arr[], int num, int target);
 
@@ -97,8 +100,14 @@ int customize()
         {
             case 1:
             {
-                cout<<"Enter the fixed symbol, it can be a word, a letter, etc.\n";
-                cin>>numerator[counter_of_numerator].content;
+                cout<<"Enter the fixed symbol, it can be a word, a letter, etc.\n"
+                    <<"The default string is \"\", press ENTER to set it to the default.\n";
+                cin.get();
+                getline(cin, numerator[counter_of_numerator].content);
+                if (numerator[counter_of_numerator].content != "\n")
+                    cout<<"The string is set to \""<<numerator[counter_of_numerator].content<<"\"\n";
+                else
+                    cout<<"The string is set to its default: \"\"\n";
                 numerator[counter_of_numerator].isfixed = true;
                 numerator[counter_of_numerator].length = (numerator[counter_of_numerator].content).size();
                 total_length += numerator[counter_of_numerator].length;
@@ -109,10 +118,17 @@ int customize()
             {
                 cout<<"Enter the variable symbol.\n";
                 cout<<"Enter the length you want to give it.\n";
-                cin>>numerator[counter_of_numerator].length;
+                while (!(cin>>numerator[counter_of_numerator].length))
+                {
+                    cin.clear();
+                    while (cin.get() != '\n')
+                        continue;
+                    cout<<"Please enter a number!\n";
+                }
                 total_length += numerator[counter_of_numerator].length;
-                cout<<"Enter the string characters you want.\n";
-                cin>>numerator[counter_of_numerator].content;
+                cout<<"Enter the string characters you want.\n"
+                    <<"You have to enter something.\n";
+                numerator[counter_of_numerator].content = dup_string_check();
                 numerator[counter_of_numerator].isfixed = false;
                 cout<<endl;
             }
@@ -124,13 +140,48 @@ int customize()
     return total_length;
 }
 
+string dup_string_check()
+{
+    string check_string = "";
+    string output_string = "";
+    int confirmer;
+    char check_array[80] = {};
+    cin>>check_string;
+    for (int i = 0; i < check_string.size(); i++)
+        check_array[i] = check_string[i];
+    sort(check_array, check_array + check_string.size());
+    output_string = check_array[0];
+    for (int i = 0; i < check_string.size() - 1; i++)
+        if (check_array[i + 1] != check_array[i])
+            output_string += check_array[i + 1];
+
+    // to confirm the change
+    if (output_string.size() != check_string.size())
+    {
+        cout<<"It seems that you have duplicate character(s) in your input string.\n"
+            <<"Will you leave it originally (Press '1')\n"
+            <<"Or modified (Press '2')\n"
+            <<"Default: automatically modified. Press any other key will be regarded as this choice.\n";
+        cin>>confirmer;
+        switch (confirmer)
+        {
+            case 1:
+                return check_string;
+            default:
+                return output_string;
+            }
+    }
+    else
+        return output_string;
+
+}
+
 bool dup_range_check(int arr[], int num, int target)
 {
     for (int i = 1; i < num; i++)
         if ((*(arr + i) != *(arr)) || ((*arr) != target))
             return false;
     return true;
-
 }
 
 void add_xiny(int x, string_type &input_string, const int total, int &counter)
