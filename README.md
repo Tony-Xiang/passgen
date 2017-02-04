@@ -5,7 +5,7 @@ My first design for a password generator. It's NOT a software, however. I'd appr
 Of course there will be some bugs in it. So I'm going to make it stronger.
 
 ## using the program
-You DON'T have to make and complie, because it just includes two files. "passgen.cpp" and "passgen".
+You DON'T have to make and complie, because it just includes one file. "passgen.cpp".
 Just open the "passgen.cpp" and compile it on your system.
 Then follow the instructions. I'm sure you will enjoy it, meanwhile, fork it.
 
